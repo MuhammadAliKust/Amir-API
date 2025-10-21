@@ -6,6 +6,7 @@ import 'package:amir_api/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthServices {
+  String  baseURL = "https://todo-nu-plum-19.vercel.app";
   ///Register User
   Future<RegisterModel> registerUser({
     required String name,
@@ -14,7 +15,7 @@ class AuthServices {
   }) async {
     try {
       http.Response response = await http.post(
-        Uri.parse("{{TODO_URL}}/users/register"),
+        Uri.parse("$baseURL/users/register"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({"name": name, "email": email, "password": pwd}),
       );
@@ -35,7 +36,7 @@ class AuthServices {
   }) async {
     try {
       http.Response response = await http.post(
-        Uri.parse("{{TODO_URL}}/users/login"),
+        Uri.parse("$baseURL/users/login"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({"email": email, "password": pwd}),
       );
@@ -53,7 +54,7 @@ class AuthServices {
   Future<UserModel> getProfile(String token) async {
     try {
       http.Response response = await http.get(
-        Uri.parse("{{TODO_URL}}/users/profile"),
+        Uri.parse("$baseURL/users/profile"),
         headers: {'Authorization': token},
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -73,7 +74,7 @@ class AuthServices {
   }) async {
     try {
       http.Response response = await http.put(
-        Uri.parse("{{TODO_URL}}/users/profile"),
+        Uri.parse("$baseURL/users/profile"),
         headers: {'Authorization': token, 'Content-Type': 'application/json'},
         body: jsonEncode({'name': name}),
       );
