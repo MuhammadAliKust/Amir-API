@@ -1,8 +1,16 @@
+import 'package:amir_api/providers/token.dart';
+import 'package:amir_api/providers/user.dart';
 import 'package:amir_api/views/login.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context)=>UserProvider()),
+      ChangeNotifierProvider(create: (context)=>TokenProvider()),
+    ],
+    child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,6 +1,10 @@
+import 'package:amir_api/providers/token.dart';
+import 'package:amir_api/providers/user.dart';
 import 'package:amir_api/services/auth.dart';
+import 'package:amir_api/views/profie.dart';
 import 'package:amir_api/views/register.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   LoginView({super.key});
@@ -18,6 +22,9 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(context);
+    var tokenProvider = Provider.of<TokenProvider>(context);
+
     return Scaffold(
       appBar: AppBar(title: Text("Login")),
       body: Column(
@@ -50,9 +57,11 @@ class _LoginViewState extends State<LoginView> {
                             pwd: pwdController.text,
                           )
                           .then((val) async {
+                            tokenProvider.setToken(val.token.toString());
                             await AuthServices()
                                 .getProfile(val.token.toString())
                                 .then((userModel) {
+                                  userProvider.setUser(userModel);
                                   isLoading = false;
                                   setState(() {});
                                   showDialog(
@@ -65,7 +74,15 @@ class _LoginViewState extends State<LoginView> {
                                         ),
                                         actions: [
                                           TextButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfileView(),
+                                                ),
+                                              );
+                                            },
                                             child: Text("Okay"),
                                           ),
                                         ],
@@ -75,7 +92,7 @@ class _LoginViewState extends State<LoginView> {
                                 });
                           });
                     } catch (e) {
-                      isLoading = false;  
+                      isLoading = false;
                       setState(() {});
                       ScaffoldMessenger.of(
                         context,
